@@ -1,0 +1,24 @@
+@misc{ala2023,
+  author       = {Australian National Wildlife Collection},
+  title        = {Myrmecobius fasciatus Waterhouse, 1836},
+  year         = {2023},
+  url          = {https://bie.ala.org.au/species/https://biodiversity.org.au/afd/taxa/6c72d199-f0f1-44d3-8197-224a2f7cff5f},
+  note         = {Accessed: 2024-11-11}
+
+@misc{ncsu2023seasons,
+  author       = {North Carolina State University},
+  title        = {Seasons: What Are the Meteorological and Astronomical Seasons?},
+  year         = {2023},
+  url          = {https://climate.ncsu.edu/learn/seasons/#:~:text=Climatologists%20usually%20use%20full%20months,autumn%20is%20September%20through%20November},
+  note         = {Accessed: 2024-11-11}
+
+}
+
+@misc{tidytuesday2023,
+  author       = {R for Data Science},
+  title        = {TidyTuesday: 2023-03-07},
+  year         = {2023},
+  url          = {https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-03-07/readme.md},
+  note         = {Accessed: 2024-11-11}
+}
+

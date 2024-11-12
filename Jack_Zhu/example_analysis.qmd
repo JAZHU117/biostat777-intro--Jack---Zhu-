@@ -1,0 +1,267 @@
+---
+title: "Example Analysis"
+---
+
+## Introduction
+
+! \[ A photo of a numbat\] (images/numbat.jpg)
+
+Numbats are endangered marsupials that now live in small colonies in Western Austrailia, though they used to be widespread throughout Southern Austrailia. They are a diurnal species, meaning that they are active during the day and inactive at night.
+
+For this example analysis, I am analyzing data from the "Numbats in Austrailia" dataset prepared by the Atlas of Living Animals and made available on the Tidyverse Tuesday repository.
+
+## Questions
+
+My questions for this analysis are as follows:
+
+1.  What time of day do numbat sightings occur?
+2.  Are they more frequent in the summer or winter?
+3.  Do sightings happen more on week days than weekends?
+4.  Is there an association between the hour of the day when numbats are sighted and the season?
+
+## Intended Audience
+
+The intended audience for this analysis is biologists, conservationists, and numbat enthusiasts. Biologists and conservationists may want to know about numbat behavior, activity, and sightings to inform future conservation methods, while numbat enthusiasts may want to be informed of the best places and times to observe them.
+
+## Data Dictionary
+
+```{r}
+##Loading Relevant Libraries
+library (dplyr) 
+library ("ggplot2")
+library("kableExtra")
+datadict <-data.frame(
+ Variable=c("decimalLatitude","decimalLongitude","eventDate", "scientificName","taxonConceptID","recordID", "dataResourceName","year","month","wday","hour","day", "dryandra","prcp","tmax","tmin"), 
+ Class=c("double", "double", "datetime", "factor", "factor", "character", "factor", "integer", "factor", "factor", "integer", "date", "logical", "double", "double", "double"),
+Description=c("decimalLatitude", "decimalLongitude", "eventDate", "Either 'Myrmecobius fasciatus' or 'Myrmecobius fasciatus rufus'", "The URL for this (sub)species", "recordID", "dataResourceName", "The 4-digit year of the event (when available)", "The 3-letter month abbreviation of the event (when available)", "The 3-letter weekday abbreviation of the event (when available)", "The hour of the event (when available)", "The date of the event (when available)", "Whether the observation was in Dryandra Woodland", "Precipitation on that day in Dryandra Woodland (when relevant), in millimeters", "Maximum temperature on that day in Dryandra Woodland (when relevant), in degrees Celsius", "Minimum temperature on that day in Dryandra Woodland (when relevant), in degrees Celsius"))
+
+datadict %>%
+  kbl(caption = "Data Dictionary") %>%
+  kable_material(c("striped", "hover"))
+ 
+```
+
+## Data Wrangling
+
+```{r}
+##Reading in Numbats Data Set 
+numbats.0 <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-03-07/numbats.csv')
+```
+
+```{r}
+#Exploring the Data Set 
+dim (numbats.0)
+str (numbats.0)
+
+##There are 16 variables in the data set and 805 observations.
+
+```
+
+```{r}
+
+
+##Selecting Relevant Variables 
+numbats.1 <-numbats.0 %>% select(scientificName, recordID, dataResourceName, year, month, wday, hour, day, dryandra, prcp, tmax, tmin)
+
+##Arranging Data Set From Earliest to Latest Sighting 
+numbats.2 <-numbats.1 %>% 
+  arrange (scientificName, day,dataResourceName)
+
+##Viewing Arragned Data Set 
+numbats.2 [1:12, 1:12]
+
+##Creating a New Seasons and Dtetime Variable 
+
+##I used ChatGPT to fix the syntax in my nested if_else statement
+
+##These two nested mutate and if_else statements dictate the following: 
+
+## 1. If the value for month is Dec", "Jan", or "Feb," then the value for the new variable, season is "Winter; if the value for month is "Mar", "Apr", or "May," then the value for the new variable, season, is "Spring; if the value for month is "Jun", "Jul", or "Aug," then the value for the new variable, season, is "Summer"; if the value for month is "Sep", "Oct", or "Nov," then the value for the new variable, season, is "Fall". If the value for month is missing, then the value for season is NA. 
+
+##2. If the value for wday is "Mon", "Tue", "Wed", "Thu", or "Fri," then the new variable, timewk, (which has a vaue of Weekday or Weekend) has a value of "Weekday". If the value for wday is Sat" or "Sun," then the new variable, timewk, has a value of "Weekend". If the value for wday is missing, then the new variable, timewk, has a value of NA. 
+
+numbats.3 <- numbats.2 %>%
+  mutate(season = if_else(
+    month %in% c("Dec", "Jan", "Feb"), "Winter",
+    if_else(
+      month %in% c("Mar", "Apr", "May"), "Spring",
+      if_else(
+        month %in% c("Jun", "Jul", "Aug"), "Summer",
+        if_else(
+          month %in% c("Sep", "Oct", "Nov"), "Fall",
+          NA_character_
+        )
+      )
+    )
+  )) %>%
+  mutate(timewk = if_else(
+    wday %in% c("Mon", "Tue", "Wed", "Thu", "Fri"), 
+    "Weekday", 
+    if_else(
+      wday %in% c("Sat", "Sun"), 
+      "Weekend", 
+      NA_character_
+    )
+  )) 
+
+ 
+
+
+```
+
+## Data Visualization
+
+```{r}
+##Generating a Frequency Table for the # of Numbat Spottings at Specific Hours of Day
+
+numbat_freq <- numbats.3 %>%
+  count(hour) %>%
+  rename(Hour = hour, Frequency = n)
+
+##Printing Frequency Table 
+print(numbat_freq)
+```
+
+I generated a frequency table that displays the frequency of numbat sightings throughout different times in the day.
+
+It appears that most numbat sightings occur during the afternoon between 1 (Hour 13) and 2 (Hour 14) pm.
+
+::: callout-note
+Note that the hour of the day is recorded in military time. For example, hour 13 is 1:00 pm, hour 22 is 10 pm, and so on and so forth.
+:::
+
+```{r}
+
+
+##Creating a Frequency Table of # of Numbat Spottings and Time of Day
+
+numbat_ct <- as.data.frame(table(numbats.3$hour))
+
+
+##Renaming Column Names of Frequency Table 
+colnames(numbat_ct) <- c("Hour", "Frequency")
+midpoint_value <- median(numbat_ct$Frequency)
+ggplot(numbat_ct, aes(x = Hour, y = Frequency, fill = Frequency)) +
+  geom_histogram(stat = "identity") +
+  scale_fill_gradient2(low = "lightyellow", mid = "darkorange", high = "red") +  # Custom gradient
+  labs(title = "Numbat Spottings Throughout the Day", x = "Hour", y = "Frequency of Spottings") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+::: callout-note
+Note from the graph that most numbats are sighted at the 13th hour of the day (1:00 pm) and that the second most common time for them to be sighted is the 14th hour (2:00 pm). There were 451 sightings at 1:00 pm and 34 sightings at 2:00 pm.
+:::
+
+```{r}
+## Creating a Frequency Table for Recorded Sightings 
+numbats.clean0 <- numbats.3 %>% filter(!is.na(season)& !is.na(hour))
+
+ggplot(numbats.clean0, aes(x = hour, fill = season)) +
+  geom_histogram(show.legend = FALSE) +
+  facet_grid(~season) +
+  scale_fill_manual(values = c("Spring" = "lightgreen", 
+                               "Summer" = "orange", 
+                               "Fall" = "brown", 
+                               "Winter" = "lightblue")) +
+  labs(title = "Numbat Spottings Throughout Day by Season", 
+       x = "Hour of the Day", 
+       y = "Frequency")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+When plotting a bar chart of the frequency of numbat spottings throughout different times of day across seasons, it seems as though most spottings were noted during the fall and the winter, with few observations in the spring and summer. It should be noted that during the fall and winter, the most number of numbat sightings were noted around 1:00-2:00 pm as well.
+
+::: {.callout .important}
+\*\*Important\*\*: Please note that this graph was constructed after omitting the missing data for time of day (hour) and season.
+:::
+
+```{r}
+## Creating a Frequency Table for # of Spottings Across Recorded Years 
+
+## Restricting Data Set to Only Observation with Date/Year Data
+
+year_freq0 <-numbats.3%>%
+  count(year) %>%
+  rename(Year = year, Frequency = n)
+
+numbats.clean1 <- numbats.3 %>% filter(!is.na(year))
+
+year_freq <- numbats.clean1 %>%
+  count(year) %>%
+  rename(Year = year, Frequency = n)
+
+ggplot(year_freq, aes(x = Year, y = Frequency, group = 1)) +  # n represents the frequency count
+  geom_line() +
+  geom_point() +  # Optionally, add points for each category
+  labs(title = "Frequency of Categories", 
+       x = "Year", 
+       y = "Frequency") +
+  scale_x_continuous(limits = c(1968, 2023))+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+When plotting the number of numbat spottings against the year, it seems that there were not many numbat spottings prior to the year 1968. This may be due to the lack of interest or infrastructure for studying the species, or both. There were also 253 missing observations for year. Perhaps with a richer data set, the graph may look very different.
+
+```{r}
+##Generating a Frequency Table for the # of Numbat Spottings at Specific Time of Week (Weekday/Weekend)
+
+weekend_freq0 <- numbats.3 %>%
+  count(timewk) %>%
+  rename("Time of Week" = timewk, Frequency = n)
+
+##Printing Frequency Table 
+print(weekend_freq0)
+
+##There are 253 missing observations 
+
+numbats.clean2 <- numbats.3 %>% filter(!is.na(year))
+weekend_freq1 <- numbats.clean2 %>%
+  count(timewk) %>%
+  rename("Time of Week" = timewk, Frequency = n)
+
+##Printing Frequency Table 
+print(weekend_freq1)
+
+ggplot(weekend_freq1, aes(x = `Time of Week`, y = Frequency, fill = `Time of Week`)) +
+  geom_col() +
+  labs(title = "Frequency of Numbat Spottings by Time of Week", 
+       x = "Time of Week", 
+       y = "Frequency") +
+theme(plot.title = element_text(hjust = 0.5))
+```
+
+When generating a bar chart of the frequency of numbat during the weekday or the weekend, it appears that there are more weekday numbat spottings than weekend numbat spottings.
+
+## Analysis: One-Way ANOVA Test
+
+```{r}
+numbat_anova <- aov(hour ~ season, data = numbats.3)
+summary(numbat_anova)
+```
+
+One question I was curious about after generating the histogram of the number of numbat spottings throughout the day by season was whether or not there was an association between the season of year and the time of day numbats were spotted. I ran a one-way ANOVA test with the variables representing the hour of the day (hour) and the season of the year (season). There was a statistically significant difference between the mean hour of numbat sightings across seasons (F(3, 548)=4.75, p=0.0028).
+
+## Discussion
+
+Based on the data, numbat sightings tend to occur in the afternoon (around the 13th or 14th hour, or 1:00-2:00 pm, with most spottings occuring around 1:00 pm). Surprisingly, there appear to be more sightings on numbats in the fall and winter rather than the spring or summer, and there tend to be more weekday numbat spottings than weekend nubat spottings. There is a statistically significant association (F(3, 548)=4.75, p=0.0028) between the mean hour of day when numbats are sighted and the season of the year.
+
+Despite these results, it is worth noting that there are 253 observations with missing data for the year and time of day (hour, day, season). Without more data on who conducted numbat spottings and or how the data of reports were gathered, it is difficult to draw inferences on why numbats were sighted more frequently on weekdays than weekends.
+
+::: important
+A note to the TA: Here are the functions that I used from each of the following packages: dplyr and ggplot2
+
+dplyr: arrange(), filter(), mutate(), select(), if_else()
+
+ggplot2: geom_col (), geon_histogram, geom_line(), geom_point()
+
+Other packages used: kableExtra
+:::
+
+## References
+
+Australia, A. of L. (n.d.). *Myrmecobius fasciatus Waterhouse, 1836*. Myrmecobius fasciatus : Numbat \| Atlas of Living Australia. https://bie.ala.org.au/species/https://biodiversity.org.au/afd/taxa/6c72d199-f0f1-44d3-8197-224a2f7cff5f
+
+*Seasons - NC Climate Education*. NC Climate Education -. (2022, April 5). https://climate.ncsu.edu/learn/seasons/#:\~:text=Climatologists%20usually%20use%20full%20months,autumn%20is%20September%20through%20November.
+
+*TidyTuesday: 2023-03-07*. GitHub. (n.d.). https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-03-07/readme.md

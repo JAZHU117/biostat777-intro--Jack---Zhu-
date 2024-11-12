@@ -1,0 +1,25 @@
+---
+title: "About"
+---
+
+## Biography
+
+I'm originally from Queens, NY, and I'm currently working as a Research Data Manager at the Johns Hopkins Bloomberg School of Public Health. I earned my Master of Public Health degree in Epidemiology and Biostatistics at the Boston University School of Public Health, and my Bachelor's degree in Psychology and Sociology at Stony Brook University.
+
+While I am still exploring my research interests, I have enjoyed working on global health and maternal and child health research studies. I have enjoyed navigating and troubleshooting data collection challenges and programming survey tools that take those challenges into consideration.
+
+## Education
+
+**Master of Public Health, Epidemiology and Biostatistics** \| May 2019 Boston University School of Public Health, Boston, MA
+
+**Bachelor of Science, Psychology and Sociology** \| May 2017 Stony Brook University, Stony Brook, NY
+
+## Publications
+
+1.       Otis M, **Zhu J**, Mustafa-Kutana SN, Bernier AV, Ma Shum J, Soros Dupre AA, Wang ML. Testing Usability and Feasibility of a Mobile Educator Tool for Pediatric Diabetes Self-Management: Mixed Methods Pilot Study. JMIR Form Res 2020; 4(5): e16262. DOI: [10.2196/16262](https://doi.org/10.2196/16262).
+
+2.       Clarence C, Shiras T, **Zhu J**, Boggs MK, Faltas N, Wadsworth A, Bradley SE, Sadruddin S, Wazny K, Goodman C, Awor P, Bhutta ZA, Källander K, Hamer DH. Setting global research priorities for private sector child health service delivery: Results from a CHNRI exercise. J Glob Health. 2020 Dec;10(2):021201. doi: [10.7189/jogh.10.021201](https://doi.org/10.7189/jogh.10.021201). PMID: 33403107; PMCID: PMC7750021.
+
+3.       Suliman S, Matias WR, Fulcher IR, Molano FJ, Collins S, Uceta E, **Zhu J**, Paxton RM, Gonsalves SF, Harden MV, Fisher M, Meldrim J, Gabriel S, Franke MF, Hung DT, Smole SC, Madoff LC, Ivers LC. Evaluation of the Access Bio CareStart rapid SARS-CoV-2 antigen test in asymptomatic individuals tested at a community mass-testing program in Western Massachusetts. Sci Rep. 2022 Dec 9;12(1):21338. doi: [10.1038/s41598-022-25266-3](https://www.nature.com/articles/s41598-022-25266-3). PMID: 36494424; PMCID: PMC9734130.
+
+4.       Matias WR, Fulcher IR, Sauer SM, Nolan CP, Guillaume Y, **Zhu J**, Molano FJ, Uceta E, Collins S, Slater DM, Sánchez VM, Moheed S, Harris JB, Charles RC, Paxton RM, Gonsalves SF, Franke MF, Ivers LC. Disparities in SARS-CoV-2 Infection by Race, Ethnicity, Language, and Social Vulnerability: Evidence from a Citywide Seroprevalence Study in Massachusetts, USA. *J. Racial and Ethnic Health Disparities* (2023). <https://doi.org/10.1007/s40615-022-01502-4>
