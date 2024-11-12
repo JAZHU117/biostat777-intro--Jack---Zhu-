@@ -1,1 +1,1 @@
-Welcome to my public repostory. It contains my personal website, constructed with Quarto. You can find the link to the website here: https://jazhu.quarto.pub/jack-zhu/.
+Hi! My name is Jack Zhu. I am currently working as a Research Data Manager at the Johns Hopkins Bloomberg School of Public Health. This is my public repository, which contains the contents of my personal website, constructed with Quarto. You can find the link to the website here: https://jazhu.quarto.pub/jack-zhu/.
